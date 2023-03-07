@@ -17,7 +17,7 @@ function App() {
   const getData = async () => {
     try {
       fetch (
-        "http://localhost:5500/entries", {
+        "https://avehealth.onrender.com/entries", {
           method: "GET",
           headers: {"Accept": "application/json"},
         }
