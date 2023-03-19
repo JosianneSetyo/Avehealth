@@ -1,0 +1,36 @@
+@import "../../../style.scss";
+
+dialog {
+  top: 5vh;
+  z-index: 20;
+  height: 50vh;
+  width: 50vw;
+  position: fixed;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border: none;
+  background-color: $natureDarkGreen;
+  color: white;
+
+  button {
+    height: 40px;
+    width: 40px;
+    background-color: $natureOrange;
+    color: black;
+    font-size: 25px;
+    padding-bottom: 5px;
+    border: none;
+    border-radius: 10px;
+    position: fixed;
+  }
+
+  img {
+    width: 40vw;
+  }
+
+  .entry-div {
+    background-color: $natureOrange;
+    border-radius: 10px;
+    margin: 10px;
+  }
+}

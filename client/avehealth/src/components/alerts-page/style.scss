@@ -1,0 +1,14 @@
+@import "../../style.scss";
+
+.alerts-page {
+  margin-top: 20vh;
+}
+
+.high-alert {
+  color: $natureOrange;
+}
+
+.low-alert {
+  color: $natureLightGreen;
+  margin-top: 10vh;
+}

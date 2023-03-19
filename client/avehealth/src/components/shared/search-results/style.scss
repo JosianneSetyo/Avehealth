@@ -1,0 +1,49 @@
+@import "../../../style.scss";
+
+$resultWidth: 35vw;
+$resultHeight: 40vh;
+$resultMinWidth: 350px;
+$resultMinHeight: 300px;
+$resultBorderRadius: 30px;
+$pTextPaddingX: 15px;
+
+.result-div {
+  width: $resultWidth;
+  height: $resultHeight;
+  min-width: $resultMinWidth;
+  min-height: $resultMinHeight;
+  border-top-left-radius: $resultBorderRadius;
+  margin: 2.5vw;
+
+  img {
+    width: $resultWidth;
+    height: 0.6 * $resultHeight;
+    min-width: $resultMinWidth;
+    border-top-left-radius: $resultBorderRadius;
+    background-color: $darkGrey;
+    object-fit: contain;
+  }
+
+  div {
+    width: $resultWidth;
+    height: 0.4 * $resultHeight;
+    min-width: $resultMinWidth;
+    background-color: $mandaiGreen;
+    border-bottom-right-radius: $resultBorderRadius;
+    color: black;
+    font-weight: 500;
+
+    .row-1 {
+      display: flex;
+      justify-content: space-between;
+      height: 0.05 * $resultHeight;
+      margin-top: -10px;
+      border-bottom-right-radius: 0;
+      
+      p {
+        padding-left: $pTextPaddingX;
+        padding-right: $pTextPaddingX;
+      }
+    }
+  }
+}

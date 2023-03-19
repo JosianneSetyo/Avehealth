@@ -1,0 +1,70 @@
+@import "../../style.scss";
+
+$alignmentLeft: 7.5vh;
+
+@keyframes refreshIconAnimation {
+  0% {transform: rotate(0deg);}
+  50% {transform: rotate(180deg);}
+  100% {transform: rotate(360deg);}
+}
+
+.nav-bar {
+  width: 100vw;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  position: fixed;
+  background-color: $natureDarkGreen;
+  z-index: 10;
+
+  .header {
+    display: flex;
+    width: 100vw;
+    height: 10vh;
+    padding-top: 1vh;
+    padding-bottom: 2vh;
+    justify-content: space-between;
+    padding-left: $alignmentLeft;
+    padding-right: $alignmentLeft;
+    color: $natureOrange;
+
+    button {
+      height: 6vh;
+      width: 6vh;
+      margin-top: 2.5vh;
+      background-color: $natureOrange;
+      border: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      
+      img {
+        height: 4vh;
+        width: 4vh;
+      }
+    }
+  }
+
+  .tabs {
+    button {
+      width: 50vw;
+      height: 7vh;
+      color: $natureDarkGreen;
+      background-color: $natureOrange;
+      font-size: 22px;
+      font-weight: 700;
+      border: none;
+      text-align: left;
+      padding-left: $alignmentLeft;
+    }
+
+    .selected {
+      background-color: $natureBeige;
+      color: $natureDarkGreen;
+      text-decoration: underline;
+    }
+  }
+}

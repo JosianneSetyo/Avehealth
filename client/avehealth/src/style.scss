@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+$offWhite: #FAF9F6;
+$darkGrey: #333333;
+$darkGreen: #104547; 
+$backgroundBeige: #FFF3E6;
+$natureOrange: #FF6864;
+$natureDarkGreen: #0B4141;
+$natureLightGreen: #6BB77B;
+$natureBeige: #FAF0DC;
+$mandaiGreen: #B5DFC8;
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: $natureBeige;
+}
+
+div {
+  display: flex; 
+  flex-direction: row; 
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  text-decoration: underline;
+}
