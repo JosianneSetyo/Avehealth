@@ -7,6 +7,7 @@ const AlertsPage = (props) => {
   const [dataUniqueIDs, setDataUniqueIDs] = useState([]);
   const [listOfAverageWeights, setListOfAverageWeights] = useState([]);
   const [listOfAlerts, setListOfAlerts] = useState([]);
+  const [listOfLowAlerts, setListOfLowAlerts] = useState([]);
 
   useEffect(() => {
     const getDataUniqueIDs = () => {
@@ -18,9 +19,9 @@ const AlertsPage = (props) => {
       let temp = [];
 
       let allEntriesCopy = [...props.allEntries];
-      allEntriesCopy.sort((a, b) => b.clock - a.clock);
+      allEntriesCopy.sort((b, a) => a.clock - b.clock);
 
-      for (let i = 0; i < allEntriesCopy.length; i ++) {
+      for (let i = allEntriesCopy.length; i >= 0; i --) {
         let idExists = false;
         
         for (let j = 0; j < listIDs.length; j ++) {
@@ -40,6 +41,8 @@ const AlertsPage = (props) => {
           }
         } 
       }
+
+      console.log(temp);
 
       setDataUniqueIDs(temp);
     }
@@ -103,19 +106,36 @@ const AlertsPage = (props) => {
     getHighAlert();
   }, [listOfAverageWeights])
 
+  useEffect(() => {
+    const getLowAlert = () => {
+      let temp = [];
+
+      for (let i = 0; i < dataUniqueIDs.length; i++){
+        if (listOfAlerts.includes(dataUniqueIDs[i]) === false){
+          temp.push(dataUniqueIDs[i]);
+        }
+      }
+
+      setListOfLowAlerts(temp);
+      
+    }
+
+    getLowAlert();
+  }, [listOfAverageWeights])
+
 
   return (
     <div className="alerts-page">
       <div>
         <h1 className="title high-alert">High Alert</h1>
-        <SearchResults allEntries={dataUniqueIDs}
+        <SearchResults allEntries={listOfAlerts}
           sortBy="weight"
           upperLimit={2500}
           lowerLimit={30}/>
       </div>
       <div>
         <h1 className="title low-alert">Low Alert</h1>
-        <SearchResults allEntries={dataUniqueIDs}
+        <SearchResults allEntries={listOfLowAlerts}
           sortBy="weight"
           upperLimit={2500}
           lowerLimit={30}/>
