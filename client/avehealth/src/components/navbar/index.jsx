@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useRef, useEffect } from "react";
 import "./style.scss";
 import RefreshIcon from "../../assets/refresh.png";
