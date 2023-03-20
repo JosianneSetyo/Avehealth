@@ -16,26 +16,26 @@ const App = () => {
 
   const getData = async () => {
     try {
-      fetch ("https://avehealth2.onrender.com/entries", {
+      fetch ("https://avehealth.onrender.com/entries", {
           method: "GET",
           headers: {"Accept": "application/json"},
         }
       )
       .then (response => response.json())
       .then (response => {
-        let temp = [];
+        // let temp = [];
         
-        for (let i = 0; i < response.length; i ++) {
-          let entry = {
-            bird_id: response[i].rfid_tag,
-            clock: response[i].date_time,
-            weight: response[i].result
-          }
+        // for (let i = 0; i < response.length; i ++) {
+        //   let entry = {
+        //     bird_id: response[i].rfid_tag,
+        //     clock: response[i].date_time,
+        //     weight: response[i].result
+        //   }
 
-          temp.push(entry);
-        }
+        //   temp.push(entry);
+        // }
 
-        setAllData(temp);
+        setAllData(response);
       });
     } catch (e) {
       console.log(e.message);
