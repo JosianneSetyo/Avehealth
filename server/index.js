@@ -19,7 +19,7 @@ var config =
     password: process.env.PASS,
     database: process.env.DATABASE,
     port: azurePORT,
-    ssl: {ca: fs.readFileSync("./certificate/DigiCertGlobalRootCA.crt.pem")}
+    ssl: {ca: fs.readFileSync("certificate/DigiCertGlobalRootCA.crt.pem")}
 };
 
 const conn = new mysql.createConnection(config);
