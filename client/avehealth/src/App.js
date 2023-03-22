@@ -23,17 +23,17 @@ const App = () => {
       )
       .then (response => response.json())
       .then (response => {
-        // let temp = [];
+        let temp = [];
         
-        // for (let i = 0; i < response.length; i ++) {
-        //   let entry = {
-        //     bird_id: response[i].rfid_tag,
-        //     clock: response[i].date_time,
-        //     weight: response[i].result
-        //   }
+      //   for (let i = 0; i < response.length; i ++) {
+      //     let entry = {
+      //       bird_id: response[i].rfid_tag,
+      //       clock: response[i].date_time,
+      //       weight: response[i].result
+      //     }
 
-        //   temp.push(entry);
-        // }
+      //     temp.push(entry);
+      //   }
 
         setAllData(response);
       });

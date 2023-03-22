@@ -108,7 +108,6 @@ const Modal = (props) => {
     <dialog ref={modalRef}>
       <button onClick={closeModal}>x</button>
       <img src={BirdImage}/>
-      <p>Species Name: Temp</p>
       {(mostRecentEntry) 
         ? <p>
             Last recorded: {mostRecentEntry.monthText} 
@@ -122,6 +121,12 @@ const Modal = (props) => {
       {(selectedEntries).map((item, index) => {
         return <div className="entry-div" key={index}>
           <p>Date/Time: {item.monthText} {item.day}, {item.hour}:{item.minutes} Weight: {item.weight}</p>
+          {(selectedEntries.bird_id === '0001H5-018A69941') 
+            ? <p>
+              Kestrel
+              </p>
+            : <p>Pigeon</p>
+        } 
         </div>
       })}
     </dialog>

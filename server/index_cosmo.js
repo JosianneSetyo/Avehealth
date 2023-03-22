@@ -16,10 +16,10 @@ const httpPORT = 5500;
 
 var config =
 {
-    host: 'prophet.mysql.database.azure.com',
-    user: 'josianne',
-    password: 'Azure@19',
-    database: 'db1',
+    host: process.env.HOST,
+    user: process.env.USER,
+    password: process.env.PASS,
+    database: process.env.DATABASE,
     port: azurePORT,
     ssl: {ca: fs.readFileSync("certificate/DigiCertGlobalRootCA.crt.pem")}
 };

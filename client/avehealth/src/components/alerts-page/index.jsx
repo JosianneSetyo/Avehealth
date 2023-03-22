@@ -30,7 +30,6 @@ const AlertsPage = (props) => {
             break;
           }
         }
-
         if (!idExists) {
           listIDs.push(allEntriesCopy[i].bird_id);
           
@@ -135,7 +134,7 @@ const AlertsPage = (props) => {
       </div>
       <div>
         <h1 className="title low-alert">Low Alert</h1>
-        <SearchResults allEntries={listOfLowAlerts}
+        <SearchResults allEntries={dataUniqueIDs}
           sortBy="weight"
           upperLimit={2500}
           lowerLimit={30}/>
