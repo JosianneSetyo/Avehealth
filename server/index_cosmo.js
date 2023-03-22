@@ -62,6 +62,8 @@ async function readData(res){
 };
 
 
+
+
 // async function readUniqueBirdID(res){
 //     const querySpec = {
 //         query: 'SELECT stariot.id, stariot.date_time, stariot.result FROM stariot t1 INNER JOIN (SELECT bird_id, MAX(CLOCK) AS latest FROM db1.birds GROUP BY bird_id) t2 ON t1.bird_id = t2.bird_id AND t1.clock = t2.latest;'
@@ -82,52 +84,52 @@ async function readData(res){
 
 
 
-function readBirdData(req, res){
-    console.log(req.body.bird_id);
-    let birdID = req.body;
+// function readBirdData(req, res){
+//     console.log(req.body.bird_id);
+//     let birdID = req.body;
     
-    conn.query(`SELECT * FROM db1.birds WHERE bird_id = '${req.body.bird_id}'`, 
-        function (err, results, fields) {
-            if (err) throw err;
-            else console.log('Selected ' + results.length + ' row(s).');
-            for (i = 0; i < results.length; i++) {
-                console.log('Row: ' + JSON.stringify(results[i]));
-            }
-            res.json(results);
-            console.log('Done.');
-        })
-  };
+//     conn.query(`SELECT * FROM db1.birds WHERE bird_id = '${req.body.bird_id}'`, 
+//         function (err, results, fields) {
+//             if (err) throw err;
+//             else console.log('Selected ' + results.length + ' row(s).');
+//             for (i = 0; i < results.length; i++) {
+//                 console.log('Row: ' + JSON.stringify(results[i]));
+//             }
+//             res.json(results);
+//             console.log('Done.');
+//         })
+//   };
 
-function readLatestBirdData(req, res){
-    console.log(req.body.bird_id);
-    let birdID = req.body;
+// function readLatestBirdData(req, res){
+//     console.log(req.body.bird_id);
+//     let birdID = req.body;
     
-    conn.query(`SELECT * FROM db1.birds WHERE bird_id = '${req.body.bird_id}' AND clock = (
-        SELECT MAX(clock)
-        FROM db1.birds
-        WHERE bird_id = '${req.body.bird_id}')`, 
-        function (err, results, fields) {
-            if (err) throw err;
-            else console.log('Selected ' + results.length + ' row(s).');
-            for (i = 0; i < results.length; i++) {
-                console.log('Row: ' + JSON.stringify(results[i]));
-            }
-            res.json(results);
-            console.log('Done.');
-        })
-  };
+//     conn.query(`SELECT * FROM db1.birds WHERE bird_id = '${req.body.bird_id}' AND clock = (
+//         SELECT MAX(clock)
+//         FROM db1.birds
+//         WHERE bird_id = '${req.body.bird_id}')`, 
+//         function (err, results, fields) {
+//             if (err) throw err;
+//             else console.log('Selected ' + results.length + ' row(s).');
+//             for (i = 0; i < results.length; i++) {
+//                 console.log('Row: ' + JSON.stringify(results[i]));
+//             }
+//             res.json(results);
+//             console.log('Done.');
+//         })
+//   };
 
-function writeData(values){
-    conn.query('INSERT INTO db1.birds (clock, bird_id, weight) VALUES (?, ?, ?);', values,
-        function (err, results, fields) {
-            if (err) throw err;
-            else console.log('Inserted ' + results.affectedRows + ' row(s).');
-            for (i = 0; i < results.length; i++) {
-                console.log('Row: ' + JSON.stringify(results[i]));
-            }
-            console.log('Done.');
-        })
-  };
+// function writeData(values){
+//     conn.query('INSERT INTO db1.birds (clock, bird_id, weight) VALUES (?, ?, ?);', values,
+//         function (err, results, fields) {
+//             if (err) throw err;
+//             else console.log('Inserted ' + results.affectedRows + ' row(s).');
+//             for (i = 0; i < results.length; i++) {
+//                 console.log('Row: ' + JSON.stringify(results[i]));
+//             }
+//             console.log('Done.');
+//         })
+//   };
 
 app.route("/entries")
     .get(async (req, res) => {
@@ -135,23 +137,23 @@ app.route("/entries")
   }
 );
 
-app.route("/uniqueBirds")
-    .get(async (req, res) => {
-        readUniqueBirdID(res);
-  }
-);
+// app.route("/uniqueBirds")
+//     .get(async (req, res) => {
+//         readUniqueBirdID(res);
+//   }
+// );
 
-app.route("/birdData")
-    .get(async (req, res) => {
-        readBirdData(req, res);
-  }
-);
+// app.route("/birdData")
+//     .get(async (req, res) => {
+//         readBirdData(req, res);
+//   }
+// );
 
-app.route("/readLatestBirdData")
-    .get(async (req, res) => {
-        readLatestBirdData(req, res);
-  }
-);
+// app.route("/readLatestBirdData")
+//     .get(async (req, res) => {
+//         readLatestBirdData(req, res);
+//   }
+// );
 
 app.route("/entries")
 	.post(async (req, res) => {

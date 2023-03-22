@@ -14,12 +14,12 @@ const httpPORT = 5500;
 
 var config =
 {
-    host: 'prophet.mysql.database.azure.com',
-    user: 'josianne',
-    password: 'Azure@19',
-    database: 'db1',
+    host: process.env.HOST,
+    user: process.env.USER,
+    password: process.env.PASS,
+    database: process.env.DATABASE,
     port: azurePORT,
-    ssl: {ca: fs.readFileSync("certificate/DigiCertGlobalRootCA.crt.pem")}
+    ssl: {ca: fs.readFileSync("./certificate/DigiCertGlobalRootCA.crt.pem")}
 };
 
 const conn = new mysql.createConnection(config);
@@ -47,12 +47,33 @@ function readData(res){
           res.json(results);
           console.log('Done.');
       })
-//   conn.end(
-//       function (err) { 
-//           if (err) throw err;
-//           else  console.log('Closing connection.') 
-//   });
 };
+
+function readComment(req, res){
+    conn.query(`SELECT * FROM db1.comments WHERE bird_id = '${req.body.bird_id}'`,
+        function (err, results, fields) {
+            if (err) throw err;
+            else console.log('Selected ' + results.length + ' row(s).');
+            for (i = 0; i < results.length; i++) {
+                console.log('Row: ' + JSON.stringify(results[i]));
+            }
+            res.json(results);
+            console.log('Done.');
+        })
+};
+
+function writeComment(values){
+    conn.query('INSERT INTO db1.comments (clock, bird_id, user_comment) VALUES (?, ?, ?);', values,
+        function (err, results, fields) {
+            if (err) throw err;
+            else console.log('Inserted ' + results.affectedRows + ' row(s).');
+            for (i = 0; i < results.length; i++) {
+                console.log('Row: ' + JSON.stringify(results[i]));
+            }
+            console.log('Done.');
+        })
+  };
+
 
 function readUniqueBirdID(res){
     conn.query(
@@ -121,6 +142,28 @@ app.route("/entries")
     .get(async (req, res) => {
        readData(res);
   }
+);
+
+app.route("/comments")
+    .get(async (req, res) => {
+       readComment(req, res);
+  }
+);
+
+app.route("/comments")
+	.post(async (req, res) => {
+		try {
+			console.log(req.body);
+            
+			const {clock, bird_id, user_comment} = req.body;
+            writeComment([clock, bird_id, user_comment]);
+
+			res.json({received : "true"}); 
+		} catch (e) {
+			console.log(e.message);
+            return res.status(403).json("Something went wrong");
+		}
+	}
 );
 
 app.route("/uniqueBirds")
