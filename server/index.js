@@ -156,7 +156,7 @@ app.route("/comments")
 			console.log(req.body);
             
 			const {clock, bird_id, medication, special_request} = req.body;
-            writeComment([clock, bird_id, medication, special_request]);
+            writeComment([clock, medication, special_request, bird_id]);
 
 			res.json({received : "true"}); 
 		} catch (e) {
