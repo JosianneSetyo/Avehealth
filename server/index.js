@@ -63,7 +63,7 @@ function readComment(req, res){
 };
 
 function writeComment(values){
-    conn.query('INSERT INTO db1.comments (clock, bird_id, medication, special_request) VALUES (?, ?, ?, ?);', values,
+    conn.query('UPDATE db1.comments SET clock=?, medication=?, special_request=? WHERE bird_id = ?;', values,
         function (err, results, fields) {
             if (err) throw err;
             else console.log('Inserted ' + results.affectedRows + ' row(s).');
