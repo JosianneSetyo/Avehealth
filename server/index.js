@@ -63,7 +63,7 @@ function readComment(req, res){
 };
 
 function writeComment(values){
-    conn.query('INSERT INTO db1.comments (clock, bird_id, user_comment) VALUES (?, ?, ?);', values,
+    conn.query('INSERT INTO db1.comments (clock, bird_id, medication, special_request) VALUES (?, ?, ?, ?);', values,
         function (err, results, fields) {
             if (err) throw err;
             else console.log('Inserted ' + results.affectedRows + ' row(s).');
@@ -155,8 +155,8 @@ app.route("/comments")
 		try {
 			console.log(req.body);
             
-			const {clock, bird_id, user_comment} = req.body;
-            writeComment([clock, bird_id, user_comment]);
+			const {clock, bird_id, medication, special_request} = req.body;
+            writeComment([clock, bird_id, medication, special_request]);
 
 			res.json({received : "true"}); 
 		} catch (e) {
