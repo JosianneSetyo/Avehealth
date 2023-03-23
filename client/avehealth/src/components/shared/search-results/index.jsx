@@ -24,7 +24,7 @@ const SearchResults = (props) => {
           let itemDate = new Date(`${item.clock}`);
           if ((props.sortBy === "date" && props.month === itemDate.getMonth() && props.day === itemDate.getDate())
               || (props.sortBy === "id" && `${item.bird_id}`.includes(props.searchID))
-              || (props.sortBy === "weight" && item.weight < props.upperLimit && item.weight >= props.lowerLimit)) {
+              || (props.sortBy === "weight")) {
             return(
               <div className="result-div" 
                 key={index} 

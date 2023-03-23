@@ -91,7 +91,6 @@ const Modal = (props) => {
         }
 
         temp.sort((a, b) => b.date - a.date);
-        console.log(temp)
       }
       setMostRecentEntry(temp[0]);
       setSelectedEntries(temp);
@@ -99,10 +98,7 @@ const Modal = (props) => {
 
     updateSelectedEntries();
   }, [props.selectedEntry, props.allEntries]);
-
-  useEffect(() => {
-    console.log(mostRecentEntry)
-  }, [mostRecentEntry])
+  
 
   return <>
     <dialog ref={modalRef}>
