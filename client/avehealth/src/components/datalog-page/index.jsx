@@ -27,40 +27,40 @@ const DataLogPage = (props) => {
           let monthText;
 
           switch (tempMonth) {
-            case (1):
+            case (0):
               monthText = "Jan";
               break;
-            case (2):
+            case (1):
               monthText = "Feb";
               break;
-            case (3):
+            case (2):
               monthText = "Mar";
               break;
-            case (4):
+            case (3):
               monthText = "Apr";
               break;
-            case (5):
+            case (4):
               monthText = "May";
               break;
-            case (6):
+            case (5):
               monthText = "Jun";
               break;
-            case (7):
+            case (6):
               monthText = "Jul";
               break;
-            case (8):
+            case (7):
               monthText = "Aug";
               break;
-            case (9):
+            case (8):
               monthText = "Sep";
               break;
-            case (10):
+            case (9):
               monthText = "Oct";
               break;
-            case (11):
+            case (10):
               monthText = "Nov";
               break;
-            case (12):
+            case (11):
               monthText = "Dec";
               break;
             default:
