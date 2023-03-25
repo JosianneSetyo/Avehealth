@@ -13,8 +13,11 @@ const App = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [allData, setAllData] = useState([]);
 
+  // To switch between servers easily
+  const [currentServer, setCurrentServer] = useState(0);
 
-  const getData = async () => {
+
+  const getDataFromPostgreSQL = async () => {
     try {
       fetch ("https://avehealth.onrender.com/entries", {
           method: "GET",
@@ -23,19 +26,40 @@ const App = () => {
       )
       .then (response => response.json())
       .then (response => {
+        let listToSort = response;
+        listToSort.sort((a, b) => new Date(b.clock) - new Date(a.clock)); 
+        setAllData(listToSort);
+      });
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+
+  const getDataFromNoSQL = async () => {
+    try {
+      fetch ("https://avehealth2.onrender.com/entries", {
+          method: "GET",
+          headers: {"Accept": "application/json"},
+        }
+      )
+      .then (response => response.json())
+      .then (response => {
         let temp = [];
         
-      //   for (let i = 0; i < response.length; i ++) {
-      //     let entry = {
-      //       bird_id: response[i].rfid_tag,
-      //       clock: response[i].date_time,
-      //       weight: response[i].result
-      //     }
+        for (let i = 0; i < response.length; i ++) {
+          let entry = {
+            bird_id: response[i].rfid_tag,
+            clock: response[i].date_time,
+            weight: response[i].result
+          }
 
-      //     temp.push(entry);
-      //   }
+          temp.push(entry);
+        }
 
-        setAllData(response);
+        let listToSort = temp;
+        listToSort.sort((a, b) => new Date(b.clock) - new Date(a.clock));
+
+        setAllData(listToSort);
       });
     } catch (e) {
       console.log(e.message);
@@ -43,7 +67,11 @@ const App = () => {
   }
 
   useEffect (() => {
-    getData();
+    if (currentServer === 0) {
+      getDataFromPostgreSQL();
+    } else if (currentServer === 1) {
+      getDataFromNoSQL();
+    }
   }, []);
 
 
@@ -51,7 +79,7 @@ const App = () => {
     <div className="App">
       <NavBar currentPage={currentPage}
         setCurrentPage={setCurrentPage}
-        getData={getData}
+        getData={getDataFromPostgreSQL}
       />
       {(currentPage === 1) 
       ? <AlertsPage allEntries={allData}/>
