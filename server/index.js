@@ -52,7 +52,7 @@ function readData(res){
 };
 
 function readComment(req, res){
-    conn.query(`SELECT * FROM db1.comments WHERE bird_id = '${req.body.bird_id}'`,
+    conn.query(`SELECT * FROM db1.specialRequest WHERE bird_id = '${req.body.bird_id}'`,
         function (err, results, fields) {
             if (err) throw err;
             else console.log('Selected ' + results.length + ' row(s).');
@@ -65,7 +65,7 @@ function readComment(req, res){
 };
 
 function writeComment(values){
-    conn.query('INSERT INTO db1.comments (clock, bird_id, medication, special_request) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE clock=VALUES(clock), bird_id=VALUES(bird_id), medication=VALUES(medication), special_request=VALUES(special_request);', values,
+    conn.query('INSERT INTO db1.specialRequest (clock, bird_id, special_request) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE clock=VALUES(clock), bird_id=VALUES(bird_id), special_request=VALUES(special_request);', values,
         function (err, results) {
             if (err) throw err;
             else console.log('Inserted ' + results.affectedRows + ' row(s).');
@@ -75,6 +75,75 @@ function writeComment(values){
             console.log('Done.');
         })
   };
+
+function readTreatment(req, res){
+    conn.query(`SELECT * FROM db1.treatment WHERE bird_id = '${req.body.bird_id}'`,
+        function (err, results, fields) {
+            if (err) throw err;
+            else console.log('Selected ' + results.length + ' row(s).');
+            for (i = 0; i < results.length; i++) {
+                console.log('Row: ' + JSON.stringify(results[i]));
+            }
+            res.json(results);
+            console.log('Done.');
+        })
+};
+
+function countTreatment(req, res){
+    conn.query(`SELECT COUNT (*) FROM db1.treatment WHERE bird_id = '${req.body.bird_id}'`,
+        function (err, results, fields) {
+            if (err) throw err;
+            else console.log('Selected ' + results.length + ' row(s).');
+            for (i = 0; i < results.length; i++) {
+                console.log('Row: ' + JSON.stringify(results[i]));
+            }
+            res.json(results);
+            console.log('Done.');
+        })
+};
+
+function deleteTreatment(req, res){
+    conn.query(`DELETE FROM db1.treatment WHERE bird_id = '${req.body.bird_id}' AND treatment_id = '${req.body.treatment_id}'`,
+        function (err, results) {
+            if (err) throw err;
+            else console.log('Inserted ' + results.affectedRows + ' row(s).');
+            for (i = 0; i < results.length; i++) {
+                console.log('Row: ' + JSON.stringify(results[i]));
+            }
+            res.json(results);
+            console.log('Done.');
+        })
+};
+
+function addTreatment(values){
+    conn.query('INSERT INTO db1.treatment (clock, bird_id, medication, dose, amount, route, duration, remaining_duration) VALUES (?, ?, ?, ?, ?, ?, ?, ?);', values,
+        function (err, results) {
+            if (err) throw err;
+            else console.log('Inserted ' + results.affectedRows + ' row(s).');
+            for (i = 0; i < results.length; i++) {
+                console.log('Row: ' + JSON.stringify(results[i]));
+            }
+            console.log('Done.');
+        })
+};
+
+function patchTreatment(req, res){
+    conn.query(`UPDATE db1.treatment SET remaining_duration = '${req.body.remaining_duration}' WHERE treatment_id = '${req.body.treatment_id}'`,
+        function (err, results) {
+            if (err) throw err;
+            else console.log('Inserted ' + results.affectedRows + ' row(s).');
+            for (i = 0; i < results.length; i++) {
+                console.log('Row: ' + JSON.stringify(results[i]));
+            }
+            res.json(results);
+            console.log('Done.');
+        })
+};
+
+
+
+
+
 
 
 function readUniqueBirdID(res){
@@ -90,7 +159,6 @@ function readUniqueBirdID(res){
             console.log('Done.');
         })
   };
-
 
 
 function readBirdData(req, res){
@@ -157,8 +225,8 @@ app.route("/comments")
 		try {
 			console.log(req.body);
             
-			const {clock, bird_id, medication, special_request} = req.body;
-            writeComment([clock, bird_id, medication, special_request]);
+			const {clock, bird_id, special_request} = req.body;
+            writeComment([clock, bird_id, special_request]);
 
 			res.json({received : "true"}); 
 		} catch (e) {
@@ -167,6 +235,50 @@ app.route("/comments")
 		}
 	}
 );
+
+app.route("/treatments")
+    .get(async (req, res) => {
+       readTreatment(req, res);
+  }
+);
+
+app.route("/treatments_count")
+    .get(async (req, res) => {
+       countTreatment(req, res);
+  }
+);
+
+app.route("/treatments")
+    .delete(async (req, res) => {
+       deleteTreatment(req, res);
+  }
+);
+
+app.route("/treatments")
+	.post(async (req, res) => {
+		try {
+			console.log(req.body);
+            
+			const {clock, bird_id, medication, dose, amount, route, duration, remaining_duration} = req.body;
+            addTreatment([clock, bird_id, medication, dose, amount, route, duration, remaining_duration]);
+
+			res.json({received : "true"}); 
+		} catch (e) {
+			console.log(e.message);
+            return res.status(403).json("Something went wrong");
+		}
+	}
+);
+
+app.route("/treatments")
+    .patch(async (req, res) => {
+       patchTreatment(req, res);
+  }
+);
+
+
+
+
 
 app.route("/uniqueBirds")
     .get(async (req, res) => {
