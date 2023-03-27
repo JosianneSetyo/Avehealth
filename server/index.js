@@ -76,8 +76,8 @@ function writeComment(values){
         })
   };
 
-function readTreatment(req, res){
-    conn.query(`SELECT * FROM db1.treatment WHERE bird_id = '${req.body.bird_id}'`,
+function readTreatment(bird_id, req, res){
+    conn.query(`SELECT * FROM db1.treatment WHERE bird_id = '${bird_id}'`,
         function (err, results, fields) {
             if (err) throw err;
             else console.log('Selected ' + results.length + ' row(s).');
@@ -89,8 +89,8 @@ function readTreatment(req, res){
         })
 };
 
-function countTreatment(req, res){
-    conn.query(`SELECT COUNT (*) FROM db1.treatment WHERE bird_id = '${req.body.bird_id}'`,
+function countTreatment(bird_id, req, res){
+    conn.query(`SELECT COUNT (*) FROM db1.treatment WHERE bird_id = '${bird_id}'`,
         function (err, results, fields) {
             if (err) throw err;
             else console.log('Selected ' + results.length + ' row(s).');
@@ -240,13 +240,15 @@ app.route("/comments")
 
 app.route("/treatments")
     .get(async (req, res) => {
-       readTreatment(req, res);
+       const bird_id = req.query.bird_id
+       readTreatment(bird_id, req, res);
   }
 );
 
 app.route("/treatments_count")
     .get(async (req, res) => {
-       countTreatment(req, res);
+       const bird_id = req.query.bird_id
+       countTreatment(bird_id, req, res);
   }
 );
 
