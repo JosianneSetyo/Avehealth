@@ -51,8 +51,8 @@ function readData(res){
       })
 };
 
-function readComment(req, res){
-    conn.query(`SELECT * FROM db1.specialRequest WHERE bird_id = '${req.body.bird_id}'`,
+function readComment(bird_id, req, res){
+    conn.query(`SELECT * FROM db1.specialRequest WHERE bird_id = '${bird_id}'`,
         function (err, results, fields) {
             if (err) throw err;
             else console.log('Selected ' + results.length + ' row(s).');
@@ -214,11 +214,13 @@ app.route("/entries")
   }
 );
 
-app.route("/comments")
-    .get(async (req, res) => {
-       readComment(req, res);
+app.get('/comments', (req, res) => {
+       const bird_id = req.query.bird_id
+       console.log(bird_id);
+       readComment(bird_id, req, res);
   }
 );
+
 
 app.route("/comments")
 	.post(async (req, res) => {
