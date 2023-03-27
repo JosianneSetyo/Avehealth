@@ -65,7 +65,7 @@ function readComment(bird_id, req, res){
 };
 
 function writeComment(values){
-    conn.query('INSERT INTO db1.specialRequest (clock, bird_id, special_request) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE clock=VALUES(clock), bird_id=VALUES(bird_id), special_request=VALUES(special_request);', values,
+    conn.query('INSERT INTO db1.specialRequest (bird_id, special_request) VALUES (?, ?) ON DUPLICATE KEY UPDATE bird_id=VALUES(bird_id), special_request=VALUES(special_request);', values,
         function (err, results) {
             if (err) throw err;
             else console.log('Inserted ' + results.affectedRows + ' row(s).');
@@ -227,8 +227,8 @@ app.route("/comments")
 		try {
 			console.log(req.body);
             
-			const {clock, bird_id, special_request} = req.body;
-            writeComment([clock, bird_id, special_request]);
+			const {bird_id, special_request} = req.body;
+            writeComment([bird_id, special_request]);
 
 			res.json({received : "true"}); 
 		} catch (e) {
