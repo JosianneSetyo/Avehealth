@@ -14,6 +14,8 @@ const { CosmosClient } = require("@azure/cosmos");
 const azurePORT = 3306;
 const httpPORT = 5500;
 
+const deviationFactor = 1.5;
+
 var config =
 {
     host: process.env.HOST,
@@ -36,17 +38,6 @@ const indexCosmoFunctions = require('./index_cosmo_functions.js');
 
 const { readData, readBirdData } = indexCosmoFunctions;
 
-conn.connect(
-    function (err) { 
-    if (err) { 
-        console.log("!!! Cannot connect !!! Error:");
-        throw err;
-    }
-    else
-    {
-       console.log("Connection established.");
-    }
-});
 
 app.route("/entries")
     .get(async (req, res) => {
@@ -74,7 +65,8 @@ app.route("/bird_entries")
     .get(async (req, res) => {
        try{
             const bird_id = req.query.bird_id
-            readBirdData(bird_id, res);
+            console.log(bird_id);
+            readBirdData(bird_id, res, deviationFactor);
        } catch(e){
             console.log(e.message);
             return res.status(403).json("Something went wrong");
