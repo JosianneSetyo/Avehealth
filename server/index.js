@@ -262,8 +262,8 @@ app.route("/treatments")
 	.post(async (req, res) => {
 		try {
 			console.log(req.body);
-            
-			const {clock, bird_id, medication, dose, amount, route, duration, remaining_duration} = req.body;
+            const clock = new Date();
+			const {bird_id, medication, dose, amount, route, duration, remaining_duration} = req.body;
             addTreatment([clock, bird_id, medication, dose, amount, route, duration, remaining_duration]);
 
 			res.json({received : "true"}); 
