@@ -14,7 +14,7 @@ const App = () => {
   const [allData, setAllData] = useState([]);
 
   // To switch between servers easily
-  const [currentServer, setCurrentServer] = useState(0);
+  const [currentServer, setCurrentServer] = useState(1);
 
 
   const getDataFromPostgreSQL = async () => {
