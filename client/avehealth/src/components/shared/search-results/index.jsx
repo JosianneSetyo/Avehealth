@@ -7,24 +7,29 @@ import BirdImage from "../../../assets/birb.png";
 const SearchResults = (props) => {
   const [selectedEntry, setSelectedEntry] = useState({});
   const [openModal, setOpenModal] = useState(false);
+  // Handles differences in pop-ups
+  const [sortBy, setSortBy] = useState(props.sortBy); 
 
   const handleSelectModal = (item) => {
     setSelectedEntry(item);
+    setSortBy(props.sortBy);
     setOpenModal(true);
   }
+
 
   return (
     <>      
       <Modal openModal={openModal}
         setOpenModal={setOpenModal}
         selectedEntry={selectedEntry}
-        allEntries={props.allEntries}/>
+        allEntries={props.allEntries}
+        sortBy={sortBy}/>
+      
       {props.allEntries.map(
         (item, index) => {
           let itemDate = new Date(`${item.clock}`);
-          if ((props.sortBy === "date" && props.month === itemDate.getMonth() && props.day === itemDate.getDate())
-              || (props.sortBy === "id" && `${item.bird_id}`.includes(props.searchID))
-              || (props.sortBy === "weight")) {
+          if ((props.sortBy === "weight" && props.selectedEntries.includes(item))
+              || (props.sortBy === "uniqueID" && props.selectedEntries.includes(item))) {
             return(
               <div className="result-div" 
                 key={index} 
@@ -47,8 +52,17 @@ const SearchResults = (props) => {
                 </div>
               </div>
             );
+          } else if ((props.sortBy === "date" && props.month === itemDate.getMonth() && props.day === itemDate.getDate())
+                      || (props.sortBy === "id" && `${item.bird_id}`.includes(props.searchID))) {
+              return (<div className="entry-row" key={index}>
+                        <p>{itemDate.getHours()}:{itemDate.getMinutes()}</p>
+                        <p>{item.bird_id}</p>
+                        <p>Species</p>
+                        <p>{item.weight}</p>
+                      </div>)
+                      
           }
-        })
+        }) 
       }
     </>
   );

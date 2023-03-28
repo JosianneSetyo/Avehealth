@@ -103,15 +103,10 @@ const AlertsPage = (props) => {
     <div className="alerts-page">
       <div>
         <h1 className="title high-alert">High Alert</h1>
-        <SearchResults allEntries={listOfHighAlerts}
-          sortBy="weight"/>
+        <SearchResults allEntries={props.allEntries}
+          sortBy="weight"
+          selectedEntries={listOfHighAlerts}/>
       </div>
-      <div>
-        <h1 className="title low-alert">Low Alert</h1>
-        <SearchResults allEntries={listOfLowAlerts}
-          sortBy="weight"/>
-      </div>    
-          
     </div>
   )
 }

@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import NavBar from "./components/navbar";
 import DataLogPage from "./components/datalog-page";
 import AlertsPage from "./components/alerts-page";
+import HomePage from "./components/home-page";
 
 import "./style.scss";
 
@@ -83,10 +84,11 @@ const App = () => {
       />
       {(currentPage === 1) 
       ? <AlertsPage allEntries={allData}/>
-      : <DataLogPage allEntries={allData}/>
+      : (currentPage === 0)
+          ? <DataLogPage allEntries={allData}/>
+          : <HomePage allEntries={allData}/>
+        
     }
-      
-  
     </div>
   );
 }

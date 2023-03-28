@@ -31,6 +31,35 @@ dialog {
   .entry-div {
     background-color: $natureOrange;
     border-radius: 10px;
+    padding: 10px;
+    height: fit-content;
     margin: 10px;
+  }
+
+  .uniqueID-form {
+    border-radius: 10px;
+    margin: 10px;
+    padding: 10px;
+    border: solid black;
+    color: black;
+    background-color: white;
+
+    button {
+      width: 31vw;
+      position: relative;
+      color: white;
+      border-radius: 0px;
+      font-size: 16px;
+    }
+
+    input {
+      width: 29.5vw;
+      height: 30px;
+    }
+
+    textarea {
+      width: 30vw;
+      height: 150px;
+    }
   }
 }

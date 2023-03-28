@@ -6,7 +6,18 @@ import "./style.scss";
 const Modal = (props) => {
   const [selectedEntries, setSelectedEntries] = useState([]);
   const [mostRecentEntry, setMostRecentEntry] = useState({});
+  const [requests, setRequests] = useState();
+  const [treatments, setTreatments] = useState([]);
   const modalRef = useRef(null);
+
+  /**
+   * States for the treatment form
+   */
+  const [medicationName, setMedicationName] = useState();
+  const [dose, setDose] = useState();
+  const [amount, setAmount] = useState();
+  const [route, setRoute] = useState();
+  const [duration, setDuration] = useState();
 
   const openModal = () => {
     modalRef.current.showModal();
@@ -18,6 +29,147 @@ const Modal = (props) => {
     modalRef.current.close();
     document.body.style.overflow = "scroll";
   }
+
+
+
+  /**
+   * Functions for Requests
+   */
+
+  const addRequest = async () => {
+    try {
+      const body = {
+        bird_id: `${props.selectedEntry.bird_id}`,
+        "special_request": `${requests}`
+      }
+
+      const response = await fetch ("https://avehealth.onrender.com/comments", {
+          method: "POST",
+          cache: "no-cache",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(body)
+        }
+      )
+      
+      const data = await response.json();
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const getRequest = async () => {
+    try {
+      fetch (`https://avehealth.onrender.com/comments?bird_id=${props.selectedEntry.bird_id}`, {
+          method: "GET",
+          cache: "no-cache",
+          headers: {"Accept": "application/json"}
+        }
+      )
+      .then (response => {
+        return response.json();
+      })
+      .then (data => {
+        try {
+          setRequests(data[0].special_request);
+        } catch (e) {
+          console.log(e);
+        }
+      })
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  useEffect(() => {
+    getRequest();
+  }, [props.selectedEntry])
+
+  /**
+   * Functions for treatments
+   */
+  const addTreatment = () => {
+    let body = {
+      clock: `${new Date().toLocaleString}`,
+      bird_id: `${props.selectedEntry.bird_id}`,
+      medication: `${medicationName}`,
+      dose: `${dose}`,
+      amount: `${amount}`,
+      route: `${route}`,
+      duration: `${duration}`,
+      remaining_duration: `${duration}`
+    }
+
+    try {
+      fetch ("https://avehealth.onrender.com/treatments", {
+          method: "POST",
+          cache: "no-cache",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(body)
+        }
+      )
+      .then (response => response.json())
+      .then (getTreatment())
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const getTreatment = () => {
+    try {
+      fetch (`https://avehealth.onrender.com/treatments?bird_id=${props.selectedEntry.bird_id}`, {
+          method: "GET",
+          cache: "no-cache",
+          headers: {"Accept": "application/json"}
+        }
+      )
+      .then (response => {
+        return response.json();
+      })
+      .then (data => {
+        console.log(treatments);
+        setTreatments(data[0]);
+      })
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const deleteTreatment = () => {
+    try {
+      fetch (`https://avehealth.onrender.com/treatments?bird_id=${props.selectedEntry.bird_id}`, {
+          method: "DELETE",
+          cache: "no-cache",
+          headers: {"Content-Type": "application/json"}
+        }
+      )
+      .then (response => {
+        return response.json();
+      })
+      .then (data => {
+        setTreatments({
+          clock: "",
+          bird_id: "",
+          medication: "",
+          dose: "",
+          amount: "",
+          route: "",
+          duration: "",
+          remaining_duration: ""
+        });
+      })
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const reduceDoseByOne = () => {
+
+  }
+
+  useEffect(() => {
+    getTreatment();
+  }, [props.selectedEntry])
 
   useEffect(() => {
     if (props.openModal === false) {
@@ -36,40 +188,40 @@ const Modal = (props) => {
           let monthText;
 
           switch (date.getMonth()) {
-            case (1):
+            case (0):
               monthText = "Jan";
               break;
-            case (2):
+            case (1):
               monthText = "Feb";
               break;
-            case (3):
+            case (2):
               monthText = "Mar";
               break;
-            case (4):
+            case (3):
               monthText = "Apr";
               break;
-            case (5):
+            case (4):
               monthText = "May";
               break;
-            case (6):
+            case (5):
               monthText = "Jun";
               break;
-            case (7):
+            case (6):
               monthText = "Jul";
               break;
-            case (8):
+            case (7):
               monthText = "Aug";
               break;
-            case (9):
+            case (8):
               monthText = "Sep";
               break;
-            case (10):
+            case (9):
               monthText = "Oct";
               break;
-            case (11):
+            case (10):
               monthText = "Nov";
               break;
-            case (12):
+            case (11):
               monthText = "Dec";
               break;
             default:
@@ -92,13 +244,14 @@ const Modal = (props) => {
 
         temp.sort((a, b) => b.date - a.date);
       }
+
       setMostRecentEntry(temp[0]);
       setSelectedEntries(temp);
     }
 
     updateSelectedEntries();
   }, [props.selectedEntry, props.allEntries]);
-  
+
 
   return <>
     <dialog ref={modalRef}>
@@ -122,9 +275,59 @@ const Modal = (props) => {
               Kestrel
               </p>
             : <p>Pigeon</p>
-        } 
+          } 
         </div>
       })}
+      {(props.sortBy === "uniqueID") 
+            ? <div className="uniqueID-form">
+                <p>Special Request</p>
+                <textarea
+                  placeholder={requests}
+                  onChange={(e) => {
+                    setRequests(e.target.value);
+                  }}></textarea>
+                <button onClick={addRequest}>Edit</button>
+                <p>Existing Treatment Plans</p>
+                {(treatments !== undefined || treatments === null)
+                  ? <div className="uniqueID-form">
+                      <p>Medication: {(treatments !== null) ? treatments.medication : "..."}</p>
+                      <p>Route: {(treatments.route !== null) ? treatments.route : "..."}</p>
+                      <p>Last Administered: {(treatments.clock !== null) ? treatments.clock : "..."}</p>
+                      <p>Duration: {(treatments.duration !== null) ? treatments.duration : "..."}</p>
+                      <p>Amount: {(treatments.amount !== null) ? treatments.amount : "..."}</p>
+                      <p>Dose: {(treatments.dose !== null) ? treatments.dose : "..."}</p>
+                      <button onClick={deleteTreatment}>Completed a dose</button>
+                      <button onClick={deleteTreatment}>Delete</button>
+                    </div>
+                  : <></>
+                }
+                <button onClick={getTreatment}>Refresh</button>
+                <p>Add New Treatment Plan</p>
+                <input placeholder="Medication Name"
+                  onChange={(e) => {
+                    setMedicationName(e.target.value);
+                  }}></input>
+                <input placeholder="Dose"
+                  onChange={(e) => {
+                    setDose(e.target.value);
+                  }}></input>
+                <input placeholder="Amount"
+                  onChange={(e) => {
+                    setAmount(e.target.value);
+                  }}></input>
+                <input placeholder="Route"
+                  onChange={(e) => {
+                    setRoute(e.target.value);
+                  }}></input>
+                <input placeholder="Days"
+                  onChange={(e) => {
+                    setDuration(e.target.value);
+                  }}></input>
+                <input placeholder="Times/day"></input>
+                <button onClick={addTreatment}>Add Treamtment Plan</button>
+              </div>
+            : <></>
+          }
     </dialog>
   </>
 }

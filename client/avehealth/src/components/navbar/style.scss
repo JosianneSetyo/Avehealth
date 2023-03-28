@@ -4,8 +4,8 @@ $alignmentLeft: 7.5vh;
 
 @keyframes refreshIconAnimation {
   0% {transform: rotate(0deg);}
-  50% {transform: rotate(180deg);}
-  100% {transform: rotate(360deg);}
+  50% {transform: rotate(-180deg);}
+  100% {transform: rotate(-360deg);}
 }
 
 .nav-bar {
@@ -50,7 +50,7 @@ $alignmentLeft: 7.5vh;
 
   .tabs {
     button {
-      width: 50vw;
+      width: 33.3vw;
       height: 7vh;
       color: $natureDarkGreen;
       background-color: $natureOrange;

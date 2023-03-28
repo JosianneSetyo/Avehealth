@@ -100,7 +100,7 @@ const DataLogPage = (props) => {
           }
         </>
       : <>
-          <SearchResults allEntries={props.allEntries}
+          <SearchResults allEntries={props.allEntries} 
             sortBy="id"
             searchID={searchID}/>
         </>

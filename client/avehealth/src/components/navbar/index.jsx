@@ -6,8 +6,9 @@ import RefreshIcon from "../../assets/refresh.png";
 
 const NavBar = (props) => {
   const refreshIconRef = useRef(null);
-  const DataLogRef = useRef(null);
-  const AlertsRef = useRef(null);
+  const dataLogRef = useRef(null);
+  const alertsRef = useRef(null);
+  const homeRef = useRef(null);
 
   const handleRefresh = () => {
     props.getData();
@@ -20,14 +21,23 @@ const NavBar = (props) => {
 
   const handleDataLogTabSelect = () => {
     props.setCurrentPage(0);
-    DataLogRef.current.classList.add("selected");
-    AlertsRef.current.classList.remove("selected");
+    dataLogRef.current.classList.add("selected");
+    alertsRef.current.classList.remove("selected");
+    homeRef.current.classList.remove("selected");
   }
 
   const handleAlertsTabSelect = () => {
     props.setCurrentPage(1);
-    AlertsRef.current.classList.add("selected");
-    DataLogRef.current.classList.remove("selected");
+    alertsRef.current.classList.add("selected");
+    dataLogRef.current.classList.remove("selected");
+    homeRef.current.classList.remove("selected");
+  }
+
+  const handleHomeTabSelect = () => {
+    props.setCurrentPage(2);
+    homeRef.current.classList.add("selected");
+    alertsRef.current.classList.remove("selected");
+    dataLogRef.current.classList.remove("selected");
   }
 
   useEffect(() => {
@@ -45,11 +55,15 @@ const NavBar = (props) => {
         </button>
       </div>
       <div className="tabs">
-        <button ref={DataLogRef} 
+        <button ref={dataLogRef} 
           onClick={handleDataLogTabSelect}>
           Data Log
         </button>
-        <button ref={AlertsRef} 
+        <button ref={homeRef} 
+          onClick={handleHomeTabSelect}>
+          Home
+        </button>
+        <button ref={alertsRef} 
           onClick={handleAlertsTabSelect}>
           Alerts
         </button>
