@@ -102,8 +102,8 @@ function countTreatment(bird_id, req, res){
         })
 };
 
-function deleteTreatment(req, res){
-    conn.query(`DELETE FROM db1.treatment WHERE bird_id = '${req.body.bird_id}' AND treatment_id = '${req.body.treatment_id}'`,
+function deleteTreatment(bird_id, req, res){
+    conn.query(`DELETE FROM db1.treatment WHERE bird_id = '${bird_id}'`,
         function (err, results) {
             if (err) throw err;
             else console.log('Inserted ' + results.affectedRows + ' row(s).');
@@ -127,8 +127,8 @@ function addTreatment(values){
         })
 };
 
-function patchTreatment(req, res){
-    conn.query(`UPDATE db1.treatment SET remaining_duration = '${req.body.remaining_duration}' WHERE treatment_id = '${req.body.treatment_id}'`,
+function patchTreatment(bird_id, remaining_duration, req, res){
+    conn.query(`UPDATE db1.treatment SET remaining_duration = '${remaining_duration}' WHERE bird_id = '${bird_id}'`,
         function (err, results) {
             if (err) throw err;
             else console.log('Inserted ' + results.affectedRows + ' row(s).');
@@ -254,7 +254,8 @@ app.route("/treatments_count")
 
 app.route("/treatments")
     .delete(async (req, res) => {
-       deleteTreatment(req, res);
+       const bird_id = req.query.bird_id
+       deleteTreatment(bird_id, req, res);
   }
 );
 
@@ -276,7 +277,9 @@ app.route("/treatments")
 
 app.route("/treatments")
     .patch(async (req, res) => {
-       patchTreatment(req, res);
+       const bird_id = req.query.bird_id
+       const remaining_duration = req.query.remaining_duration - 1;
+       patchTreatment(bird_id, remaining_duration, req, res);
   }
 );
 
