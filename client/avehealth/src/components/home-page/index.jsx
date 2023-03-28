@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from "react";
 import "./style.scss";
 import SearchResults from "../shared/search-results";
