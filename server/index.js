@@ -208,6 +208,8 @@ function writeData(values){
         })
   };
 
+
+  
 app.route("/entries")
     .get(async (req, res) => {
        readData(res);
@@ -215,9 +217,14 @@ app.route("/entries")
 );
 
 app.get('/comments', (req, res) => {
+    try {
        const bird_id = req.query.bird_id
        console.log(bird_id);
        readComment(bird_id, req, res);
+    } catch(e){
+        console.log(e.message);
+        return res.status(403).json("Something went wrong");
+    }
   }
 );
 
@@ -240,22 +247,37 @@ app.route("/comments")
 
 app.route("/treatments")
     .get(async (req, res) => {
+       try {
        const bird_id = req.query.bird_id
        readTreatment(bird_id, req, res);
+       } catch(e){
+            console.log(e.message);
+            return res.status(403).json("Something went wrong");
+       }
   }
 );
 
 app.route("/treatments_count")
     .get(async (req, res) => {
-       const bird_id = req.query.bird_id
-       countTreatment(bird_id, req, res);
+       try{
+            const bird_id = req.query.bird_id
+            countTreatment(bird_id, req, res);
+       } catch(e){
+            console.log(e.message);
+            return res.status(403).json("Something went wrong");
+       }
   }
 );
 
 app.route("/treatments")
     .delete(async (req, res) => {
-       const bird_id = req.query.bird_id
-       deleteTreatment(bird_id, req, res);
+       try{
+            const bird_id = req.query.bird_id
+            deleteTreatment(bird_id, req, res);
+       } catch(e){
+            console.log(e.message);
+            return res.status(403).json("Something went wrong");
+       }
   }
 );
 
@@ -277,9 +299,14 @@ app.route("/treatments")
 
 app.route("/treatments")
     .patch(async (req, res) => {
+       try{
        const bird_id = req.query.bird_id
        const remaining_duration = req.query.remaining_duration - 1;
        patchTreatment(bird_id, remaining_duration, req, res);
+       } catch(e){
+            console.log(e.message);
+            return res.status(403).json("Something went wrong");
+       }
   }
 );
 
