@@ -258,13 +258,17 @@ const Modal = (props) => {
       <button onClick={closeModal}>x</button>
       <img src={BirdImage}/>
       {(mostRecentEntry) 
-        ? <p>
-            Last recorded: {mostRecentEntry.monthText} 
-            {" "}{mostRecentEntry.day} 
-            {", "}{mostRecentEntry.hour}
-            {":"}{mostRecentEntry.minutes}
-            {" Weight: "}{mostRecentEntry.weight}{"g"}
-          </p>
+        ? <div className="top-text">
+            <p>
+              {" Weight: "}{mostRecentEntry.weight}{"g"}
+            </p>
+            <p>
+              Last recorded: {mostRecentEntry.monthText} 
+              {" "}{mostRecentEntry.day} 
+              {", "}{mostRecentEntry.hour}
+              {":"}{mostRecentEntry.minutes}
+            </p>
+          </div> 
         : <p>Something went wrong</p>
       }
             {(props.sortBy === "uniqueID") 
