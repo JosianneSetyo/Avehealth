@@ -263,6 +263,7 @@ const Modal = (props) => {
             {" "}{mostRecentEntry.day} 
             {", "}{mostRecentEntry.hour}
             {":"}{mostRecentEntry.minutes}
+            {" Weight: "}{mostRecentEntry.weight}
           </p>
         : <p>Something went wrong</p>
       }
