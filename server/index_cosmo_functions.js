@@ -17,7 +17,7 @@ const container = client.database("stariot").container("stariot001");
 
 async function readData(res){
     const querySpec = {
-        query: 'SELECT * FROM stariot ORDER BY stariot.date_time'
+        query: 'SELECT * FROM stariot WHERE NOT IS_NULL(stariot.rfid_tag) ORDER BY stariot.date_time'
       };
     const queryOptions = {
         maxItemCount: -1
@@ -81,4 +81,103 @@ async function readBirdData(bird_id, res, deviationFactor){
   console.log('Done.');
 };
 
-module.exports = { readData, readBirdData };
+function readComment(bird_id, req, res){
+  conn.query(`SELECT * FROM db1.specialRequest WHERE bird_id = '${bird_id}'`,
+      function (err, results, fields) {
+          if (err) throw err;
+          else console.log('Selected ' + results.length + ' row(s).');
+          for (i = 0; i < results.length; i++) {
+              console.log('Row: ' + JSON.stringify(results[i]));
+          }
+          res.json(results);
+          console.log('Done.');
+      })
+};
+
+function writeComment(values){
+  conn.query('INSERT INTO db1.specialRequest (bird_id, special_request) VALUES (?, ?) ON DUPLICATE KEY UPDATE bird_id=VALUES(bird_id), special_request=VALUES(special_request);', values,
+      function (err, results) {
+          if (err) throw err;
+          else console.log('Inserted ' + results.affectedRows + ' row(s).');
+          for (i = 0; i < results.length; i++) {
+              console.log('Row: ' + JSON.stringify(results[i]));
+          }
+          console.log('Done.');
+      })
+};
+
+function readTreatment(bird_id, req, res){
+  conn.query(`SELECT * FROM db1.treatment WHERE bird_id = '${bird_id}'`,
+      function (err, results, fields) {
+          if (err) throw err;
+          else console.log('Selected ' + results.length + ' row(s).');
+          for (i = 0; i < results.length; i++) {
+              console.log('Row: ' + JSON.stringify(results[i]));
+          }
+          res.json(results);
+          console.log('Done.');
+      })
+};
+
+function countTreatment(bird_id, req, res){
+  conn.query(`SELECT COUNT (*) FROM db1.treatment WHERE bird_id = '${bird_id}'`,
+      function (err, results, fields) {
+          if (err) throw err;
+          else console.log('Selected ' + results.length + ' row(s).');
+          for (i = 0; i < results.length; i++) {
+              console.log('Row: ' + JSON.stringify(results[i]));
+          }
+          res.json(results);
+          console.log('Done.');
+      })
+};
+
+function deleteTreatment(bird_id, req, res){
+  conn.query(`DELETE FROM db1.treatment WHERE bird_id = '${bird_id}'`,
+      function (err, results) {
+          if (err) throw err;
+          else console.log('Inserted ' + results.affectedRows + ' row(s).');
+          for (i = 0; i < results.length; i++) {
+              console.log('Row: ' + JSON.stringify(results[i]));
+          }
+          res.json(results);
+          console.log('Done.');
+      })
+};
+
+function addTreatment(values){
+  conn.query('INSERT INTO db1.treatment (clock, bird_id, medication, dose, amount, route, duration, remaining_duration) VALUES (?, ?, ?, ?, ?, ?, ?, ?);', values,
+      function (err, results) {
+          if (err) throw err;
+          else console.log('Inserted ' + results.affectedRows + ' row(s).');
+          for (i = 0; i < results.length; i++) {
+              console.log('Row: ' + JSON.stringify(results[i]));
+          }
+          console.log('Done.');
+      })
+};
+
+function patchTreatment(bird_id, remaining_duration, req, res){
+  conn.query(`UPDATE db1.treatment SET remaining_duration = '${remaining_duration}' WHERE bird_id = '${bird_id}'`,
+      function (err, results) {
+          if (err) throw err;
+          else console.log('Inserted ' + results.affectedRows + ' row(s).');
+          for (i = 0; i < results.length; i++) {
+              console.log('Row: ' + JSON.stringify(results[i]));
+          }
+          res.json(results);
+          console.log('Done.');
+      })
+};
+
+
+
+
+
+
+
+
+
+
+
+module.exports = { readData, readBirdData, readComment, writeComment, readTreatment, countTreatment, deleteTreatment, addTreatment, patchTreatment };

@@ -36,7 +36,19 @@ const conn = new mysql.createConnection(config);
 
 const indexCosmoFunctions = require('./index_cosmo_functions.js');
 
-const { readData, readBirdData } = indexCosmoFunctions;
+const { readData, readBirdData, readComment, writeComment, readTreatment, countTreatment, deleteTreatment, addTreatment, patchTreatment } = indexCosmoFunctions;
+
+conn.connect(
+    function (err) { 
+    if (err) { 
+        console.log("!!! Cannot connect !!! Error:");
+        throw err;
+    }
+    else
+    {
+       console.log("Connection established.");
+    }
+});
 
 
 app.route("/entries")
@@ -45,13 +57,39 @@ app.route("/entries")
   }
 );
 
-app.route("/entries")
+app.route("/bird_entries")
+    .get(async (req, res) => {
+       try{
+            const bird_id = req.query.bird_id
+            console.log(bird_id);
+            readBirdData(bird_id, res, deviationFactor);
+       } catch(e){
+            console.log(e.message);
+            return res.status(403).json("Something went wrong");
+       }
+  }
+);
+
+app.get('/comments', (req, res) => {
+    try {
+       const bird_id = req.query.bird_id
+       console.log(bird_id);
+       readComment(bird_id, req, res);
+    } catch(e){
+        console.log(e.message);
+        return res.status(403).json("Something went wrong");
+    }
+  }
+);
+
+
+app.route("/comments")
 	.post(async (req, res) => {
 		try {
 			console.log(req.body);
             
-			const {clock, bird_id, weight} = req.body;
-            writeData([clock, bird_id, weight]);
+			const {bird_id, special_request} = req.body;
+            writeComment([bird_id, special_request]);
 
 			res.json({received : "true"}); 
 		} catch (e) {
@@ -61,12 +99,64 @@ app.route("/entries")
 	}
 );
 
-app.route("/bird_entries")
+app.route("/treatments")
+    .get(async (req, res) => {
+       try {
+       const bird_id = req.query.bird_id
+       readTreatment(bird_id, req, res);
+       } catch(e){
+            console.log(e.message);
+            return res.status(403).json("Something went wrong");
+       }
+  }
+);
+
+app.route("/treatments_count")
     .get(async (req, res) => {
        try{
             const bird_id = req.query.bird_id
-            console.log(bird_id);
-            readBirdData(bird_id, res, deviationFactor);
+            countTreatment(bird_id, req, res);
+       } catch(e){
+            console.log(e.message);
+            return res.status(403).json("Something went wrong");
+       }
+  }
+);
+
+app.route("/treatments")
+    .delete(async (req, res) => {
+       try{
+            const bird_id = req.query.bird_id
+            deleteTreatment(bird_id, req, res);
+       } catch(e){
+            console.log(e.message);
+            return res.status(403).json("Something went wrong");
+       }
+  }
+);
+
+app.route("/treatments")
+	.post(async (req, res) => {
+		try {
+			console.log(req.body);
+            const clock = new Date();
+			const {bird_id, medication, dose, amount, route, duration, remaining_duration} = req.body;
+            addTreatment([clock, bird_id, medication, dose, amount, route, duration, remaining_duration]);
+
+			res.json({received : "true"}); 
+		} catch (e) {
+			console.log(e.message);
+            return res.status(403).json("Something went wrong");
+		}
+	}
+);
+
+app.route("/treatments")
+    .patch(async (req, res) => {
+       try{
+       const bird_id = req.query.bird_id
+       const remaining_duration = req.query.remaining_duration - 1;
+       patchTreatment(bird_id, remaining_duration, req, res);
        } catch(e){
             console.log(e.message);
             return res.status(403).json("Something went wrong");
