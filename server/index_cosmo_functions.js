@@ -17,7 +17,7 @@ const container = client.database("stariot").container("stariot001");
 
 async function readData(res){
     const querySpec = {
-        query: 'SELECT * FROM stariot WHERE IS_DEFINED(stariot.rfid_tag) ORDER BY stariot.date_time'
+        query: 'SELECT * FROM stariot WHERE NOT IS_NULL(stariot.rfid_tag) ORDER BY stariot.date_time'
       };
     const queryOptions = {
         maxItemCount: -1

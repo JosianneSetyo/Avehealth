@@ -67,7 +67,7 @@ async function allItems() {
 
 async function queryAllItems() {
     const querySpec = {
-      query: 'SELECT * FROM stariot'
+      query: 'SELECT * FROM stariot WHERE NOT IS_NULL(stariot.rfid_tag)'
     };
     const queryOptions = {
       maxItemCount: -1
@@ -79,11 +79,11 @@ async function queryAllItems() {
 
 
 
-  // queryAllItems().then((items) => {
-  //   console.log(items);
-  // }).catch((error) => {
-  //   console.error(error);
-  // });
+  queryAllItems().then((items) => {
+    console.log(items);
+  }).catch((error) => {
+    console.error(error);
+  });
 
   queryAllItems().then((items) => {
     console.log("downloading data");
@@ -102,6 +102,7 @@ const queryAllContainers = async () => {
     const {resources} = await database.containers.query(querySpec, queryOptions).fetchAll();
     return resources;
 };
+
 
 queryAllContainers().then((containers) => {
     console.log("Here are all the containers");
