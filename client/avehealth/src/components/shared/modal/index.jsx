@@ -66,8 +66,14 @@ const Modal = (props) => {
           headers: {"Accept": "application/json"}
         }
       )
+      .catch (e => {
+        console.log(e);
+      })
       .then (response => {
         return response.json();
+      })
+      .catch (e => {
+        console.log(e);
       })
       .then (data => {
         try {
@@ -123,12 +129,21 @@ const Modal = (props) => {
           headers: {"Accept": "application/json"}
         }
       )
+      .catch (e => {
+        console.log(e);
+      })
       .then (response => {
         return response.json();
+      })
+      .catch (e => {
+        console.log(e);
       })
       .then (data => {
         console.log(treatments);
         setTreatments(data[0]);
+      })
+      .catch (e => {
+        console.log(e);
       })
     } catch (e) {
       console.log(e);
@@ -161,10 +176,6 @@ const Modal = (props) => {
     } catch (e) {
       console.log(e);
     }
-  }
-
-  const reduceDoseByOne = () => {
-
   }
 
   useEffect(() => {
@@ -259,8 +270,8 @@ const Modal = (props) => {
       <img src={BirdImage}/>
       {(mostRecentEntry) 
         ? <div className="top-text">
-            <p>
-              {" Weight: "}{mostRecentEntry.weight}{"g"}
+            <p className="weight-text">
+              {" Weight: "}{Number(mostRecentEntry.weight).toFixed(2)}{"g"}
             </p>
             <p>
               Last recorded: {mostRecentEntry.monthText} 
