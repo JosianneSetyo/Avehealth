@@ -34,6 +34,7 @@ async function readData(res){
 
 function calculateMedian(values) {
   const middleIndex = Math.floor(values.length / 2);
+  console.log(middleIndex)
   if (values.length % 2 === 0) {
     // If there are an even number of values, take the average of the middle two values
     return (values[middleIndex - 1] + values[middleIndex]) / 2;
@@ -41,6 +42,29 @@ function calculateMedian(values) {
     // If there are an odd number of values, take the middle value
     return values[middleIndex];
   }
+}
+
+function returnFiltered(items, deviationFactor) {
+  const values = items.map(item => item.result);
+  //Calculate median
+  median = 0;
+  const middleIndex = Math.floor(values.length / 2);
+  console.log(middleIndex)
+
+  //Calculate quartiles
+  const q1 = calculateMedian(values.slice(0, middleIndex));
+  const q3 = calculateMedian(values.slice(middleIndex + (values.length % 2 === 0 ? 0 : 1)));
+  //apply filter
+  values.sort((a, b) => a - b);
+  const iqr = q3 - q1;
+  console.log(iqr)
+
+  const lowerBound = q1 - deviationFactor * iqr;
+  const upperBound = q3 + deviationFactor * iqr;
+  console.log(q3)
+  const trimmedValues = items.filter((value) => value.result >= lowerBound && value.result <= upperBound);
+
+  return trimmedValues;
 }
 
 //This median+interquartile filtering system takes ALL data of each bird for now
@@ -55,29 +79,48 @@ async function readBirdData(bird_id, res, deviationFactor){
 
   console.log('Selected ' + items.length + ' row(s).');
 
-  const values = items.map(item => item.result);
 
-  //Calculate median
-  median = 0;
-  const middleIndex = Math.floor(values.length / 2);
-
-  //Calculate quartiles
-  const q1 = calculateMedian(values.slice(0, middleIndex));
-  const q3 = calculateMedian(values.slice(middleIndex + (values.length % 2 === 0 ? 0 : 1)));
-
-  //apply filter
-  values.sort((a, b) => a - b);
-  const iqr = q3 - q1;
-
-  const lowerBound = q1 - deviationFactor * iqr;
-  const upperBound = q3 + deviationFactor * iqr;
-
-  const trimmedValues = items.filter((value) => value.result >= lowerBound && value.result <= upperBound);
-
+  const trimmedValues = returnFiltered(items, deviationFactor);
+  
   for (i = 0; i < trimmedValues.length; i++) {
     console.log('Row: ' + JSON.stringify(trimmedValues[i]));
   }
   res.json(trimmedValues);
+  console.log('Done.');
+};
+
+async function getWeightedAverage(bird_id, param, res){
+  const date = new Date();
+  const offsetDate = new Date(date);
+  offsetDate.setDate(date.getDate() - param); // subtract 'param' days from current date
+
+  // set time of 'offsetDate' to midnight
+  offsetDate.setHours(0, 0, 0, 0);
+  console.log(offsetDate)
+  const querySpec = {
+    query: `SELECT *
+            FROM stariot 
+            WHERE stariot.rfid_tag = '${bird_id}'
+            AND DateTimeDiff("dd", stariot.date_time, GetCurrentDateTime()) = ${param}`
+  };
+  const queryOptions = {
+    maxItemCount: -1
+  };
+  const { resources: items } = await container.items.query(querySpec, queryOptions).fetchAll();
+
+  console.log('Selected ' + items.length + ' row(s).');
+
+  const values = items.map(item => item.result);
+
+  let sum = 0;
+  values.forEach(value => {
+    sum += value;
+  });
+
+  const average = sum / values.length;
+  console.log('Average: ' + average);
+  
+  res.json(average);
   console.log('Done.');
 };
 
@@ -180,4 +223,4 @@ function patchTreatment(bird_id, remaining_duration, req, res){
 
 
 
-module.exports = { readData, readBirdData, readComment, writeComment, readTreatment, countTreatment, deleteTreatment, addTreatment, patchTreatment };
+module.exports = { readData, readBirdData, readComment, writeComment, readTreatment, countTreatment, deleteTreatment, addTreatment, patchTreatment, getWeightedAverage };

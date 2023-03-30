@@ -3,8 +3,8 @@
 dialog {
   top: 5vh;
   z-index: 20;
-  height: 50vh;
-  width: 50vw;
+  height: 75vh;
+  width: 75vw;
   position: fixed;
   border-top-right-radius: 20px;
   border-bottom-left-radius: 20px;
@@ -45,7 +45,7 @@ dialog {
     background-color: white;
 
     button {
-      width: 31vw;
+      width: 56vw;
       position: relative;
       color: white;
       border-radius: 0px;
@@ -58,7 +58,7 @@ dialog {
     }
 
     textarea {
-      width: 30vw;
+      width: 55vw;
       height: 150px;
     }
   }

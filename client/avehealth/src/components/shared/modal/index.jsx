@@ -266,19 +266,7 @@ const Modal = (props) => {
           </p>
         : <p>Something went wrong</p>
       }
-      <h1>Logs</h1>
-      {(selectedEntries).map((item, index) => {
-        return <div className="entry-div" key={index}>
-          <p>Date/Time: {item.monthText} {item.day}, {item.hour}:{item.minutes} Weight: {item.weight}</p>
-          {(selectedEntries.bird_id === '0001H5-018A69941') 
-            ? <p>
-              Kestrel
-              </p>
-            : <p>Pigeon</p>
-          } 
-        </div>
-      })}
-      {(props.sortBy === "uniqueID") 
+            {(props.sortBy === "uniqueID") 
             ? <div className="uniqueID-form">
                 <p>Special Request</p>
                 <textarea
@@ -324,10 +312,17 @@ const Modal = (props) => {
                     setDuration(e.target.value);
                   }}></input>
                 <input placeholder="Times/day"></input>
-                <button onClick={addTreatment}>Add Treamtment Plan</button>
+                <button onClick={addTreatment}>Add Treatment Plan</button>
               </div>
             : <></>
           }
+      <h1>Logs</h1>
+      {(selectedEntries).map((item, index) => {
+        return <div className="entry-div" key={index}>
+          <p>Date/Time: {item.monthText} {item.day}, {item.hour}:{item.minutes} Weight: {item.weight}</p>
+        </div>
+      })}
+
     </dialog>
   </>
 }

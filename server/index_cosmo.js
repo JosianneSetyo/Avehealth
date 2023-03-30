@@ -38,7 +38,7 @@ const conn = new mysql.createConnection(config);
 
 const indexCosmoFunctions = require('./index_cosmo_functions.js');
 
-const { readData, readBirdData, readComment, writeComment, readTreatment, countTreatment, deleteTreatment, addTreatment, patchTreatment } = indexCosmoFunctions;
+const { readData, readBirdData, readComment, writeComment, readTreatment, countTreatment, deleteTreatment, addTreatment, patchTreatment, getWeightedAverage } = indexCosmoFunctions;
 
 conn.connect(
     function (err) { 
@@ -159,6 +159,20 @@ app.route("/treatments")
        const bird_id = req.query.bird_id
        const remaining_duration = req.query.remaining_duration - 1;
        patchTreatment(bird_id, remaining_duration, req, res);
+       } catch(e){
+            console.log(e.message);
+            return res.status(403).json("Something went wrong");
+       }
+  }
+);
+
+app.route("/weighted_average")
+    .get(async (req, res) => {
+       try{
+            const bird_id = req.query.bird_id
+            const param = parseInt(req.query.param) + 1
+
+            getWeightedAverage(bird_id, param, res);
        } catch(e){
             console.log(e.message);
             return res.status(403).json("Something went wrong");
