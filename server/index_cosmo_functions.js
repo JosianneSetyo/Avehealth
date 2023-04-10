@@ -15,6 +15,33 @@ const key = "jaPZrdJ0bo86jDGVXgdW9BSbJcT3benNrBgOSlq3e0KzCgpWm25zLDAXnIR1Em5Ndm4
 const client = new CosmosClient({ endpoint, key });
 const container = client.database("stariot").container("stariot001");
 
+const azurePORT = 3306;
+
+var config =
+{
+    host: process.env.HOST,
+    user: process.env.USER,
+    password: process.env.PASS,
+    database: process.env.DATABASE,
+    port: azurePORT,
+    ssl: {ca: fs.readFileSync("certificate/DigiCertGlobalRootCA.crt.pem")}
+};
+
+const conn = new mysql.createConnection(config);
+
+conn.connect(
+  function (err) { 
+  if (err) { 
+      console.log("!!! Cannot connect !!! Error:");
+      throw err;
+  }
+  else
+  {
+     console.log("Connection established.");
+  }
+});
+
+
 async function readData(res){
     const querySpec = {
         query: 'SELECT * FROM stariot WHERE NOT IS_NULL(stariot.rfid_tag) ORDER BY stariot.date_time'
@@ -46,6 +73,7 @@ function calculateMedian(values) {
 
 function returnFiltered(items, deviationFactor) {
   const values = items.map(item => item.result);
+  values.sort((a, b) => a - b);
   //Calculate median
   median = 0;
   const middleIndex = Math.floor(values.length / 2);
@@ -55,7 +83,6 @@ function returnFiltered(items, deviationFactor) {
   const q1 = calculateMedian(values.slice(0, middleIndex));
   const q3 = calculateMedian(values.slice(middleIndex + (values.length % 2 === 0 ? 0 : 1)));
   //apply filter
-  values.sort((a, b) => a - b);
   const iqr = q3 - q1;
   console.log(iqr)
 

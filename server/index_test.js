@@ -79,7 +79,7 @@ async function queryAllItems() {
 
 
 
-  queryAllItems().then((items) => {
+ allItems().then((items) => {
     console.log("here are the test results")
     console.log(items);
   }).catch((error) => {
