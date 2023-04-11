@@ -21,6 +21,7 @@ const SearchResults = (props) => {
     <>      
       <Modal openModal={openModal}
         setOpenModal={setOpenModal}
+        setSelectedEntry={setSelectedEntry}
         selectedEntry={selectedEntry}
         allEntries={props.allEntries}
         sortBy={sortBy}/>
