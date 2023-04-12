@@ -86,6 +86,7 @@ app.route("/treatments")
     .get(async (req, res) => {
        try {
        const bird_id = req.query.bird_id
+       console.log(bird_id);
        readTreatment(bird_id, req, res);
        } catch(e){
             console.log(e.message);
@@ -139,7 +140,19 @@ app.route("/treatments")
        try{
        const bird_id = req.query.bird_id
        const remaining_duration = req.query.remaining_duration - 1;
-       patchTreatment(bird_id, remaining_duration, req, res);
+       
+       if (remaining_duration <= 0){
+          try{
+               deleteTreatment(bird_id, req, res);
+          } catch(e){
+               console.log(e.message);
+               return res.status(403).json("Something went wrong");
+          }
+       }
+       else {
+          patchTreatment(bird_id, remaining_duration, req, res);
+       }
+
        } catch(e){
             console.log(e.message);
             return res.status(403).json("Something went wrong");
