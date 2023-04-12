@@ -20,6 +20,43 @@ const Modal = (props) => {
   const [route, setRoute] = useState();
   const [duration, setDuration] = useState();
 
+  /**
+   * Josianne's booboo code
+   */
+  const calculateMedian = (values) => {
+    const middleIndex = Math.floor(values.length / 2);
+    console.log(middleIndex)
+    if (values.length % 2 === 0) {
+      // If there are an even number of values, take the average of the middle two values
+      return (values[middleIndex - 1] + values[middleIndex]) / 2;
+    } else {
+      // If there are an odd number of values, take the middle value
+      return values[middleIndex];
+    }
+  }
+  
+  const returnFiltered = (items, deviationFactor) => {
+    const values = items.map(item => item.weight);
+    
+    values.sort((a, b) => a - b);
+    //Calculate median
+    const middleIndex = Math.floor(values.length / 2);
+  
+    //Calculate quartiles
+    const q1 = calculateMedian(values.slice(0, middleIndex));
+    const q3 = calculateMedian(values.slice(middleIndex + (values.length % 2 === 0 ? 0 : 1)));
+    //apply filter
+    const iqr = q3 - q1;
+
+  
+    const lowerBound = q1 - deviationFactor * iqr;
+    const upperBound = q3 + deviationFactor * iqr;
+
+    const trimmedValues = items.filter((value) => value.weight >= lowerBound && value.weight <= upperBound);
+
+    return trimmedValues;
+  }
+
   const openModal = () => {
     modalRef.current.showModal();
     document.body.style.overflow = "hidden";
@@ -297,8 +334,14 @@ const Modal = (props) => {
         temp.sort((a, b) => b.date - a.date);
       }
 
+      if (temp.length > 20) {
+        let filteredEntries = returnFiltered(temp, 2);
+        setSelectedEntries(filteredEntries);
+      } else {
+        setSelectedEntries(temp);
+      }
+
       setMostRecentEntry(temp[0]);
-      setSelectedEntries(temp);
     }
 
     updateSelectedEntries();
