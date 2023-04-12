@@ -196,6 +196,29 @@ const Modal = (props) => {
     }
   }
 
+  const updateTreatment = () => {
+    try {
+      fetch (`https://avehealth2.onrender.com/treatments?bird_id=${props.selectedEntry.bird_id}&remaining_duration=${treatments.remaining_duration}`, {
+          method: "PATCH",
+          cache: "no-cache",
+          headers: {"Content-Type": "application/json"}
+        }
+      )
+      .catch (e => console.log(e))
+      .then (response => {
+        return response.json();
+      })
+      .catch (e => console.log(e))
+      .then (
+        data => {
+          console.log(data);
+        }
+      )
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   useEffect(() => {
     getTreatment();
   }, [props.selectedEntry])
@@ -316,10 +339,10 @@ const Modal = (props) => {
                       <p>Medication: {(treatments !== null) ? treatments.medication : "..."}</p>
                       <p>Route: {(treatments.route !== null) ? treatments.route : "..."}</p>
                       <p>Last Administered: {(treatments.clock !== null) ? treatments.clock : "..."}</p>
-                      <p>Duration: {(treatments.duration !== null) ? treatments.duration : "..."}</p>
+                      <p>Remaining duration: {(treatments.remaining_duration !== null) ? treatments.remaining_duration : "..."}</p>
                       <p>Amount: {(treatments.amount !== null) ? treatments.amount : "..."}</p>
                       <p>Dose: {(treatments.dose !== null) ? treatments.dose : "..."}</p>
-                      <button onClick={deleteTreatment}>Completed a dose</button>
+                      <button onClick={updateTreatment}>Completed a dose</button>
                       <button onClick={deleteTreatment}>Delete</button>
                     </div>
                   : <></>
@@ -342,11 +365,11 @@ const Modal = (props) => {
                   onChange={(e) => {
                     setRoute(e.target.value);
                   }}></input>
-                <input placeholder="Days"
+                <input placeholder="Duration"
                   onChange={(e) => {
                     setDuration(e.target.value);
                   }}></input>
-                <input placeholder="Times/day"></input>
+                {/* <input placeholder="Times/day"></input> */}
                 <button onClick={addTreatment}>Add Treatment Plan</button>
               </div>
             : <></>
