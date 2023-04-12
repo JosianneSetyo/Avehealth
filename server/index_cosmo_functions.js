@@ -106,14 +106,19 @@ async function readBirdData(bird_id, res, deviationFactor){
 
   console.log('Selected ' + items.length + ' row(s).');
 
-
-  const trimmedValues = returnFiltered(items, deviationFactor);
-  
-  for (i = 0; i < trimmedValues.length; i++) {
-    console.log('Row: ' + JSON.stringify(trimmedValues[i]));
+  if (items.length > 20){
+    const trimmedValues = returnFiltered(items, deviationFactor);
+    
+    for (i = 0; i < trimmedValues.length; i++) {
+      console.log('Row: ' + JSON.stringify(trimmedValues[i]));
+    }
+    res.json(trimmedValues);
+    console.log('Done.');
   }
-  res.json(trimmedValues);
-  console.log('Done.');
+  else {
+    res.json(items);
+    console.log("Done")
+  };
 };
 
 async function getWeightedAverage(bird_id, param, res){
