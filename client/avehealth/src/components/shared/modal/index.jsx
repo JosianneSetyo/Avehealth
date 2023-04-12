@@ -9,6 +9,7 @@ const Modal = (props) => {
   const [requests, setRequests] = useState();
   const [treatments, setTreatments] = useState([]);
   const modalRef = useRef(null);
+  const requestRef = useRef(null);
 
   /**
    * States for the treatment form
@@ -24,7 +25,18 @@ const Modal = (props) => {
     document.body.style.overflow = "hidden";
   }
 
+  const clearRequestInput = () => {
+    try {
+      console.log(requestRef.current.value)
+      requestRef.current.value = "";
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   const closeModal = () => {
+    clearRequestInput();
+    props.setSelectedEntry("");
     props.setOpenModal(false);
     modalRef.current.close();
     document.body.style.overflow = "scroll";
@@ -43,7 +55,7 @@ const Modal = (props) => {
         "special_request": `${requests}`
       }
 
-      const response = await fetch ("https://avehealth.onrender.com/comments", {
+      const response = await fetch ("https://avehealth2.onrender.com/comments", {
           method: "POST",
           cache: "no-cache",
           headers: {"Content-Type": "application/json"},
@@ -60,25 +72,30 @@ const Modal = (props) => {
 
   const getRequest = async () => {
     try {
-      fetch (`https://avehealth.onrender.com/comments?bird_id=${props.selectedEntry.bird_id}`, {
+      fetch (`https://avehealth2.onrender.com/comments?bird_id=${props.selectedEntry.bird_id}`, {
           method: "GET",
           cache: "no-cache",
           headers: {"Accept": "application/json"}
         }
       )
       .catch (e => {
+        setRequests("");
         console.log(e);
       })
       .then (response => {
+        console.log(response)
         return response.json();
       })
       .catch (e => {
+        setRequests("");
         console.log(e);
       })
       .then (data => {
         try {
+          console.log(data)
           setRequests(data[0].special_request);
         } catch (e) {
+          setRequests("");
           console.log(e);
         }
       })
@@ -89,7 +106,8 @@ const Modal = (props) => {
 
   useEffect(() => {
     getRequest();
-  }, [props.selectedEntry])
+
+  }, [props.selectedEntry]);
 
   /**
    * Functions for treatments
@@ -107,7 +125,7 @@ const Modal = (props) => {
     }
 
     try {
-      fetch ("https://avehealth.onrender.com/treatments", {
+      fetch ("https://avehealth2.onrender.com/treatments", {
           method: "POST",
           cache: "no-cache",
           headers: {"Content-Type": "application/json"},
@@ -123,7 +141,7 @@ const Modal = (props) => {
 
   const getTreatment = () => {
     try {
-      fetch (`https://avehealth.onrender.com/treatments?bird_id=${props.selectedEntry.bird_id}`, {
+      fetch (`https://avehealth2.onrender.com/treatments?bird_id=${props.selectedEntry.bird_id}`, {
           method: "GET",
           cache: "no-cache",
           headers: {"Accept": "application/json"}
@@ -152,7 +170,7 @@ const Modal = (props) => {
 
   const deleteTreatment = () => {
     try {
-      fetch (`https://avehealth.onrender.com/treatments?bird_id=${props.selectedEntry.bird_id}`, {
+      fetch (`https://avehealth2.onrender.com/treatments?bird_id=${props.selectedEntry.bird_id}`, {
           method: "DELETE",
           cache: "no-cache",
           headers: {"Content-Type": "application/json"}
@@ -285,7 +303,8 @@ const Modal = (props) => {
             {(props.sortBy === "uniqueID") 
             ? <div className="uniqueID-form">
                 <p>Special Request</p>
-                <textarea
+                <textarea 
+                  ref={requestRef}
                   placeholder={requests}
                   onChange={(e) => {
                     setRequests(e.target.value);
