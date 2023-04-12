@@ -27,26 +27,24 @@ const AlertsPage = (props) => {
   }
   
   const returnFiltered = (items, deviationFactor) => {
-    const values = items.map(item => item.result);
-    console.log(values)
+    const values = items.map(item => item.weight);
+    
     values.sort((a, b) => a - b);
     //Calculate median
-    let median = 0;
     const middleIndex = Math.floor(values.length / 2);
-    console.log(middleIndex)
   
     //Calculate quartiles
     const q1 = calculateMedian(values.slice(0, middleIndex));
     const q3 = calculateMedian(values.slice(middleIndex + (values.length % 2 === 0 ? 0 : 1)));
     //apply filter
     const iqr = q3 - q1;
-    console.log(iqr)
+
   
     const lowerBound = q1 - deviationFactor * iqr;
     const upperBound = q3 + deviationFactor * iqr;
-    console.log(q3)
-    const trimmedValues = items.filter((value) => value.result >= lowerBound && value.result <= upperBound);
-  
+
+    const trimmedValues = items.filter((value) => value.weight >= lowerBound && value.weight <= upperBound);
+
     return trimmedValues;
   }
 
@@ -150,9 +148,8 @@ const AlertsPage = (props) => {
     const highAlertList = [];
 
     for (let k = 0; k < allEntriesSortedByIDs.length; k ++) {
-      console.log(allEntriesSortedByIDs)
-      if (allEntriesSortedByIDs[k].listOfEntries.length > 0) {
-        let temp = returnFiltered(allEntriesSortedByIDs[k].listOfEntries, 1.5);
+      if (allEntriesSortedByIDs[k].listOfEntries.length > 20) {
+        let temp = returnFiltered(allEntriesSortedByIDs[k].listOfEntries, 2);
         console.log(temp)
       }
     }
