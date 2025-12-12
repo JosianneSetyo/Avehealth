@@ -14,7 +14,7 @@ const App = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [allData, setAllData] = useState([]);
 
-  // To switch between servers easily
+  // To switch between PostgreSQL server and NoSQL server
   const [currentServer, setCurrentServer] = useState(1);
 
 
